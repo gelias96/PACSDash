@@ -31,12 +31,29 @@
    
 
     <!--Load dashboard script and stylesheet, chart scripts-->
-	<link rel="stylesheet" type="text/css" href="css/dashboard-stylesheet.css">	           	         
+	<script type="text/javascript" src="js/config-file.js"></script>
+	<script type="text/javascript">	
+		var head = document.getElementsByTagName('head')[0];
+		var chartLength = configfile.charts.length;
+		for (var i=chartLength; i--;) {
+			js = document.createElement("script");
+			js.type = "text/javascript";
+			switch (configfile.charts[i]) {
+				case 'pie':
+					js.src = "js/piechart.js";
+					break;
+			head.appendChild(js);
+			}
+		}	
+	</script>
 	<script type="text/javascript" src="js/dashboard-script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/dashboard-stylesheet.css">	           	         	
+	
+<!--
   	<script type="text/javascript" src="js/piechart.js"></script>	
   	<script type="text/javascript" src="js/scatterchart.js"></script>	
   	<script type="text/javascript" src="js/columnchart.js"></script>	
-  	
+ --> 	
   	<!-- load runbootstrap function -->
   	<script type="text/javascript" src="js/runbootstrap.js"></script>	
 

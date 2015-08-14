@@ -1,3 +1,3 @@
-var configFile = {
+var configfile = {
 	charts: ['pie']
 }
