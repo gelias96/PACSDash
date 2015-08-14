@@ -1,5 +1,4 @@
-/*
-var global = {
+var pacsdash = {
 	data: null,
 	dashboard: null,
 	yearSlider: null,
@@ -34,7 +33,6 @@ var global = {
 		return this.sourceSearcher;
 	}			
 };
-*/
 // Load the Visualization API and the controls package.
 google.load('visualization', '1.0', {'packages':['controls']});
 
@@ -167,7 +165,7 @@ function drawDashboard() {
 		  'showRowNumber': 'true',
 		  'legend': 'right'
 		},
-		'view': {'columns': [0,1,2,3,4]}
+		'view': {'columns': [0,1,2,3,4,5]}
 	  });
 
 	  myTable = new google.visualization.ChartWrapper({
@@ -657,7 +655,7 @@ function drawDashboard() {
 		  var scatterDataCombined;
 		  var scatterDataCombined2;
 		  if (combo) { 
-			  scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': n, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
+			  scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': 5, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
 			  var row_index = scatterDataCombined.getNumberOfRows()-1;
 			  for (var i=yearLength; i--;) {
 				  scatterArray[i+1] = [];

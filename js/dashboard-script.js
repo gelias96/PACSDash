@@ -1,5 +1,38 @@
-
-
+var pacsdash = {
+	data: null,
+	dashboard: null,
+	yearSlider: null,
+	sourceSearcher: null,
+	modalityCategory: null,
+	studySlider: null,
+	pixelSlider: null,
+	tableChart: null,
+	myTable: null,
+	setData: function(dt){
+		this.data = dt
+	},
+	getData: function(){
+		return this.data;
+	},
+	setDashboard: function(db){
+		this.dashboard = db;
+	},
+	getDashboard: function(){
+		return this.dashboard;
+	},
+	setYearSlider: function(ys){
+		this.yearSlider = ys;
+	},
+	getYearSlider: function(){
+		return yearSlider;
+	},
+	setSourceSearcher: function(ss){
+		this.sourceSearcher = ss;
+	},
+	getSourceSearcher: function(){
+		return this.sourceSearcher;
+	}			
+};
 // Load the Visualization API and the controls package.
 google.load('visualization', '1.0', {'packages':['controls']});
 
@@ -10,9 +43,10 @@ google.setOnLoadCallback(drawDashboard);
 // instantiates a dashboard, controls, and charts, and 
 // passes in the data and draws it.
 function drawDashboard() {
-
+  //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing
+  //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit#gid=0
   // Create my data table.
-  var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit#gid=0");
+  var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing");
   query.send(handleQueryResponse);
 
   function handleQueryResponse(response) {
@@ -131,7 +165,7 @@ function drawDashboard() {
 		  'showRowNumber': 'true',
 		  'legend': 'right'
 		},
-		'view': {'columns': [0,1,2,3,4]}
+		'view': {'columns': [0,1,2,3,4,5]}
 	  });
 
 	  myTable = new google.visualization.ChartWrapper({
@@ -147,6 +181,8 @@ function drawDashboard() {
 
 	  // Create a pie chart on dashboards 'ready' event. Make it a variable so I can remove it easily.
 	  google.visualization.events.addOneTimeListener(dashboard,'ready',function() {
+	  	  var showCombined;
+	  	  var pieView;
 		  var tableView = tableChart.getDataTable();
 		  var pieData = google.visualization.data.group(tableView, [1],[{'column': 2, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
 		  numberFormatter.format(pieData, 1); // Apply formatter to study count
@@ -182,16 +218,18 @@ function drawDashboard() {
 		  showCombined = true;				
 	
 		  drawOnReady = google.visualization.events.addListener(dashboard, 'ready', function() {
-			  updatePie(pieView)
+			  updatePie(pieView, showCombined)
 		  }) 
 	
-		  updatePie(pieView);
+		  updatePie(pieView, showCombined);
 	  }); 
 
 //------------------------** BEGIN PIE CHART **------------------------------------------------------------
 	  // Function to show pieChart when selected
 	  // Create a pie chart on dashboards 'ready' event
-	  $("[name='pie']").click(function() {   
+	  $("[name='pie']").click(function() { 
+	  	  var showCombined;
+	  	  var pieView;  
 		  if (myChart.getChartType() == 'PieChart') {
 			  if ($(this).attr('showCombined') == "yes") {
 				  showCombined = true;
@@ -205,6 +243,10 @@ function drawDashboard() {
 				  myChart.setOption('title','Total Pixel Volume (GB)')
 				  pieView = 3;
 			  }
+		  	  google.visualization.events.removeListener(drawOnReady); 
+		  	  drawOnReady = google.visualization.events.addListener(dashboard,'ready', function() {
+			  		updatePie(pieView, showCombined) 
+		  	  })			  
 			  updatePie(pieView, showCombined)
 			  return;	
 		  }
@@ -319,6 +361,8 @@ function drawDashboard() {
 //------------------------** BEGIN SCATTER CHART **------------------------------------------------------------
 	  // Create Scatter Chart on selection
 	  $("[name='scatter']").click(function(){
+	      var showCombined;
+	      var scatterView;
 		  if (myChart.getChartType() == 'ScatterChart') {
 			  if ($(this).attr('showCombined') == "yes") {					
 				  showCombined = true;
@@ -338,10 +382,14 @@ function drawDashboard() {
 				  myChart.setOption('vAxis.title','Pixel Volume in Gigabytes')
 				  scatterView = 3;					
 			  } 
-				  updateScatter(scatterView, showCombined);
-				  addScatterEvents(showCombined);
-				  return;
-			  }
+		  	  google.visualization.events.removeListener(drawOnReady); 
+		  	  drawOnReady = google.visualization.events.addListener(dashboard,'ready',function() {
+			  		updateScatter(scatterView, showCombined)
+		  	  })			  
+			   updateScatter(scatterView, showCombined);
+		       addScatterEvents(showCombined);
+			   return;
+		  }
 		  myChart = new google.visualization.ChartWrapper({
 				'chartType': 'ScatterChart',
 				'containerId': 'chart_div',
@@ -607,7 +655,7 @@ function drawDashboard() {
 		  var scatterDataCombined;
 		  var scatterDataCombined2;
 		  if (combo) { 
-			  scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': n, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
+			  scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': 5, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
 			  var row_index = scatterDataCombined.getNumberOfRows()-1;
 			  for (var i=yearLength; i--;) {
 				  scatterArray[i+1] = [];
@@ -949,6 +997,7 @@ function drawDashboard() {
 //------------------------** BEGIN COLUMN CHART **------------------------------------------------------------
 	  // Create column chart on selection
 	  $("[name='column']").click(function () {
+	  	  var columnView;
 		  if (myChart.getChartType() == 'ColumnChart') {
 			  if ($(this).attr('dataToKey') == 'study-count') {
 				  myChart.setOption('title','Internal vs. External: Study Count over time')
@@ -958,7 +1007,11 @@ function drawDashboard() {
 				  myChart.setOption('title', 'Internal vs. External: Pixel Volume over time')
 				  myChart.setOption('vAxis.title','Pixel Volume in Gigabytes')					
 				  columnView = 3;					
-			  }					
+			  }
+		      google.visualization.events.removeListener(drawOnReady); 
+		  	  drawOnReady = google.visualization.events.addListener(dashboard,'ready', function() {
+			  		updateColumn(columnView) 
+		  	  })			  					
 			  updateColumn(columnView);				
 			  return;
 		  }
