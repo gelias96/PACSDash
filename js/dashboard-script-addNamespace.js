@@ -1,3 +1,4 @@
+/*
 var global = {
 	data: null,
 	dashboard: null,
@@ -33,6 +34,7 @@ var global = {
 		return this.sourceSearcher;
 	}			
 };
+*/
 // Load the Visualization API and the controls package.
 google.load('visualization', '1.0', {'packages':['controls']});
 
