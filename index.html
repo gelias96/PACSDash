@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<!-- In this version, I am avoiding the brute force method of looping through my dataTable and adding formatted data to columns at the end of my dataTable.
+	 Instead, I draw a dashboard, and bind only one tableChart to multiple controls. I call a 'ready' event for the dashboard.
+	 On that event, I call tableChart.getDataTable() to see the tableCharts data. 
+	 From this data I can re-aggregate my other charts(or whatever else I need to do) and draw them again, updating their view.
+	 
+	 Version 4 update: Made piecharts update a function like the scatter plot is in v3. Will continue to do this for all charts.
+	 Version 5 update: Introducing new for-loop method. <!-- for (i=length; i--;). This speeds up iteration by comparing i against 0.
+	 Version 6 update: Changing the layout/style of the content 
+-->
+	 
+<html>
+  <head>
+    <!--Load JQuery and bootstrap-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+	<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+	<script type="text/javascript" src="js/bootstrap-slider.js"></script>	  
+	<link rel="stylesheet" href="css/bootstrap-slider.css" type="text/css"/>   		 	
+    <style type="text/css">
+		.bs-example{
+			margin: 20px;
+		}
+	</style> 
+    
+    <!--Load the AJAX API-->
+<script type="text/javascript" src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1"}]}'></script>
+   
+
+    <!--Load dashboard script and stylesheet-->
+	<link rel="stylesheet" type="text/css" href="css/dashboard-stylesheet.css">    
+	<script type="text/javascript" src="js/dashboard-script-addNamespace.js"></script>
+	
+	<title>PACSDash</title>
+  </head>
+  <body>
+    <!--Div that will hold the dashboard-->
+      <div id="container">
+      	<div id="header"> 
+        	<h2>PACSDash</h2>
+      	</div>
+      	<div id="content">
+			<div id="left">
+			  <div class="control" id="category-filter-div" style="display: none"></div>
+		  
+			  <div class="control" id="ui-category-filter-div">
+				<div><b>Modalities</b></div>
+				<select id="multiple-modalities" multiple="multiple">
+					<option value="select-all">Deselect all</option>					
+					<option selected="selected" value="CR">CR</option>
+					<option selected="selected" value="CT">CT</option>
+					<option selected="selected" value="CTPT">CTPT</option>
+					<option selected="selected" value="MG">MG</option>
+					<option selected="selected" value="MR">MR</option>
+					<option selected="selected" value="MRPT">MRPT</option>
+					<option selected="selected" value="NM">NM</option>
+					<option selected="selected" value="PT">PT</option>
+					<option selected="selected" value="RF">RF</option>
+					<option selected="selected" value="US">US</option>
+					<option selected="selected" value="XA">XA</option>
+					<option selected="selected" value="OT">OT</option>
+				</select>
+			  </div>
+		  
+			  <div class="control" id="source-filter-div" style="display: none"></div>
+		  
+			  <div class="control" id="ui-source-filter-div">
+				<div><b>Source</b></div>
+				<select id="multiple-sources" multiple="multiple">
+					<option selected="selected" value="Internal">Internal</option>
+					<option selected="selected" value="External">External</option>
+				</select>
+			  </div>
+		  
+			  
+			  <div id="ui-study-slider-div"><input id="ui-study-slider" type="text" class="span2" value=""/><span id="study-span-left"></span><span id="study-filter-title"><b>Study Count</b></span><span id="study-span-right"></span></div>
+			  <div id="ui-pixel-slider-div"><input id="ui-pixel-slider" type="text" class="span2" value=""/><span id="pixel-span-left"></span><span id="pixel-filter-title"><b>Pixel Volume(GB)</b></span><span id="pixel-span-right"></span></div>
+			  <div id="ui-year-slider-div"><input id="ui-year-slider" type="text" class="span2" value=""/><span id="year-span-left"></span><span id="year-filter-title"><b>Year</b></span><span id="year-span-right"></span></div>		  
+			  <div class="control" id="study-filter-div" style="display: none"></div>			  
+			  <div class="control" id="pixel-filter-div" style="display: none"></div>
+			  <div class="control" id="year-filter-div" style="display: none"></div>
+			</div>
+			<div id="right">
+				<div id="top">
+					<div class="bs-example">
+						<div id="main-tabs">
+						<ul class="nav nav-tabs">
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Total Study Count<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a data-toggle="tab" href="#" name="pie" dataToKey="study-count" showCombined="no">show sources separately</a></li>
+									<li><a data-toggle="tab" href="#" name="pie" dataToKey="study-count" showCombined="yes">show sources combined</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Total Pixel Volume<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a data-toggle="tab" href="#" name="pie" dataToKey="pixel-volume" showCombined="no">show sources separately</a></li>
+									<li><a data-toggle="tab" href="#" name="pie" dataToKey="pixel-volume" showCombined="yes">show sources combined</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Study Count Over Time<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a data-toggle="tab" href="#" name="scatter" dataToKey="study-count" showCombined="no">show sources separately</a></li>
+									<li><a data-toggle="tab" href="#" name="scatter" dataToKey="study-count" showCombined="yes">show sources combined</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Pixel Volume Over Time<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a data-toggle="tab" href="#" name="scatter" dataToKey="pixel-volume" showCombined="no">show sources separately</a></li>
+									<li><a data-toggle="tab" href="#" name="scatter" dataToKey="pixel-volume" showCombined="yes">show sources combined</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Total Internal/External Over Time<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><a data-toggle="tab" href="#" name="column" dataToKey="study-count">study count</a></li>
+									<li><a data-toggle="tab" href="#" name="column" dataToKey="pixel-volume">pixel volume</a></li> 
+								</ul>       		
+							</li>
+						</ul>	
+						</div>
+						<ul class="nav nav-tabs">
+							<li id="scatter-trendline" class="dropdown" style="display: none">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Trendline<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li id="trend-info"><i>applies to first modality in legend</i></li>
+									<li><a data-toggle="tab" href="#" class="scatter-trendline-option" name="linear">Linear</a></li>
+									<li><a data-toggle="tab" href="#" class="scatter-trendline-option" name="polynomial">Polynomial</a></li> 
+									<li><a data-toggle="tab" href="#" class="scatter-trendline-option" name="exponential">Exponential</a></li> 				
+									<li id="clear-trendline" style="display: none"><a data-toggle="tab" href="#" class="scatter-trendline-option">Clear trendline</a></li> 																							
+								</ul>       		
+							</li>
+						</ul>
+					</div>
+					<div class="information" id="info1">
+					</div>
+				</div>					
+				<div id="bottom">
+					<div id="charts">
+						<div id="chart_div"></div>
+						<div id="chart_div2"></div>
+					</div>			
+					<div id="table">
+						<div id="table_div" style="display: none"></div>
+						<div id="table_div2"></div>
+					</div>
+			    </div>
+		   </div> 	
+       </div>
+      </div>   
+	  <script type="text/javascript">
+	  function runBootstrap(dt) {
+			  $('#multiple-modalities').multiselect({
+			  	maxHeight: 160,
+			  	onChange: function (option, checked, select) {
+			  		var value = $(option).val();
+			  		if (value == 'select-all') {
+			  			if ($('#ui-category-filter-div option[value="select-all"]').html() == 'Select all') {
+							$('#multiple-modalities').multiselect('selectAll');
+							modalityCategory.setState({selectedValues: ['CR','CT','CTPT','MG','MR','MRPT','NM','PT','RF','US','XA','OT']});
+							$('#ui-category-filter-div option[value="select-all"]').html('Deselect all')
+							$('#ui-category-filter-div option[value="select-all"]').prop('selected', false);
+						} else {
+							$('#multiple-modalities').multiselect('deselectAll');
+							modalityCategory.setState({selectedValues: []});
+							$('#ui-category-filter-div option[value="select-all"]').html('Select all')															
+						}
+						$('#multiple-modalities').multiselect('updateButtonText');	
+						$('#multiple-modalities').multiselect('rebuild');
+			  		} else {
+						var selected = modalityCategory.getState().selectedValues;
+						if (checked) {
+							selected.push(value);
+						} else {
+							selected.splice(selected.indexOf(value), 1);
+						}
+						modalityCategory.setState({selectedValues: selected});
+					}			  		
+			  		modalityCategory.draw();
+			  	},
+			  	buttonWidth: '200px',
+			  	nonSelectedText: 'None selected',
+			  	allSelectedText: 'All modalities shown'
+			})
+			$('#multiple-sources').multiselect({
+			  	onChange: function (option, checked, select) {
+			  		var value = $(option).val();
+						var selected = sourceSearcher.getState().selectedValues;
+					if (checked) {
+						selected.push(value);
+					} else {
+						selected.splice(selected.indexOf(value), 1);
+					}
+					sourceSearcher.setState({selectedValues: selected});			  		
+			  		sourceSearcher.draw();
+			  	},
+			  	buttonWidth: '200px',
+			  	nonSelectedText: 'None selected',
+			  	allSelectedText: 'All sources shown'			  					 
+		  })
+		  var value;
+		  var max = dt.getColumnRange(2).max
+		  var min = dt.getColumnRange(2).min	
+		  	  
+		  $('#study-span-left').html('<b>'+min+'</b>');
+		  $('#study-span-right').html('<b>'+max+'</b>');				  
+		  var studySlider = $("#ui-study-slider").slider({
+		  	min: min,
+		  	max: max,
+		  	step: 5,
+		  	value:[min, max],
+		  	tooltip: 'always'
+		  });
+
+		  studySlider.on('slideStop', function (newValue) {
+		  	studyRangeSlider.setState({lowValue: newValue.value[0], highValue: newValue.value[1]});
+		  	studyRangeSlider.draw();
+		  })			  	  	 
+		  
+		  max = dt.getColumnRange(3).max
+		  min = dt.getColumnRange(3).min
+		  $('#pixel-span-left').html('<b>'+min+'</b>');
+		  $('#pixel-span-right').html('<b>'+max+'</b>');		  		  		  
+		  var pixelSlider = $("#ui-pixel-slider").slider({
+		  	min: min,
+		  	max: max,
+		  	step: 5,
+		  	value:[min, max],
+		  	tooltip: 'always'		  	
+		  });		  
+		  pixelSlider.on('slideStop', function (newValue) {
+		  	pixelRangeSlider.setState({lowValue: newValue.value[0], highValue: newValue.value[1]});
+		  	pixelRangeSlider.draw();
+		  })
+	 
+		  max = dt.getColumnRange(0).max
+		  min = dt.getColumnRange(0).min		 	 
+		  $('#year-span-left').html('<b>'+min+'</b>');
+		  $('#year-span-right').html('<b>'+max+'</b>');		
+		  var yearSlider = $("#ui-year-slider").slider({
+		  	min: min,
+		  	max: max,
+		  	step: 1,
+		  	value:[min, max],
+		  	tooltip: 'always'
+		  });		  
+		  yearSlider.on('slideStop', function (newValue) {
+		  	yearRangeSlider.setState({lowValue: newValue.value[0], highValue: newValue.value[1]});
+		  	yearRangeSlider.draw();
+		  })
+		  	  
+	  };	 
+	  </script>          	          
+  </body>
+</html>
+
+
+

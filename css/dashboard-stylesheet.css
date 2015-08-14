@@ -1,0 +1,178 @@
+body {
+	background-color: #EEE;
+}
+
+#container {
+	background-color: #D4E5E4;
+	height: 640px;
+	width: 1280px;
+}
+
+#header {
+	background-color: #A0D7D6;
+	color: #616262;
+	text-align: center;
+	padding:0px;
+}
+
+#content {
+	width:1280px;
+	height: 557px;	
+}
+
+#left {
+	float: left;
+	padding: 10px;
+	width: 250px;
+	height: 557px;
+}
+
+#ui-category-filter-div {
+	width: 130px;
+}
+
+#ui-source-filter-div {
+	padding-top: 40px;
+	width: 130px;
+	padding-bottom: 100px;	
+}
+
+#ui-study-slider-div {
+	height: 100px;
+	width: 240px;
+	padding-left: 7px;
+}
+#study-span-left {
+	height:20px;
+	width: 32px;
+	float: left;
+}
+#study-filter-title {
+	padding-left: 25px;
+	text-align: center;
+}
+#study-span-right {
+	float: right;
+	padding-right:13px;	
+}
+
+#ui-pixel-slider-div {
+	height: 100px
+	width: 240px;	
+	padding-left: 7px;
+	padding-top: 19px;
+	padding-bottom: 7px; 
+}
+#pixel-span-left {
+	height:20px;
+	width: 32px;
+	float: left;
+}
+#pixel-filter-title {
+	padding-left: 7px;
+	text-align: center;		
+}
+#pixel-span-right {
+	float: right;
+}
+
+#ui-year-slider-div {
+	height: 100px;
+	width: 240px;	
+	padding-left: 7px;	
+	padding-top: 65px;
+}
+#year-span-left {
+	float: left;
+}
+#year-filter-title {
+	padding-left: 55px;
+	text-align: center;
+}
+#year-span-right {
+	float: right;
+	padding-right:13px;
+}
+#control-info {
+	position: absolute;
+	padding-top: 30px;
+	text-align: left;
+	width: 500px;
+}
+
+#right {
+	width: 1030px;
+	height: 557;
+	float: left;
+	padding: 10px;
+}
+
+#top {
+	width: 980px;
+	height:70px;
+}
+.bs-example {
+	width: 970px;
+	left: 260px;
+}
+
+#scatter-trendline {
+	position: absolute;
+	z-index: 1;
+	top: 141px;
+	left: 278px;		
+}
+
+#info1 {
+	height:15px;
+	text-align: left;
+	width: 520px;
+	position: absolute;
+	z-index: 2;		
+	left: 405px;	
+}
+#trend-info {
+	text-align: center;
+}
+
+#bottom {
+	padding-top:20px;
+	padding-left:5px;
+	width: 1005px;
+	height: 420px;
+}
+
+#charts {
+	float:left;
+	width: 520px;
+	height: 400px;
+}
+
+#chart_div {
+	width: 100%;
+	height: 400px;
+	float:left;
+}
+
+#chart_div2 {
+	height: 400px;
+	float:left;
+}
+
+#table {
+	width: 480px;
+	height: 400px;
+	float: right;
+	border-color: red;
+	border-width: 10px;
+}
+
+#table_div {
+	height: 400px;
+	width: 480px;
+}
+
+#table_div2 {
+	height: 400px;
+	width: 480px;
+}
