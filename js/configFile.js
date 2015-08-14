@@ -1,0 +1,8 @@
+configFile = {
+	charts: ['pie', 'scatter]
+	
+	
+	
+	
+
+}
