@@ -1,4 +1,5 @@
-var pacsdash = {
+
+/* var pacsdash = {
 	data: null,
 	dashboard: null,
 	yearSlider: null,
@@ -33,7 +34,22 @@ var pacsdash = {
 		return this.sourceSearcher;
 	}			
 };
-
+*/
+/*
+function pacdash(parameter) {
+	
+	// Create the private var
+	var data = null,
+		self = this;
+	self.parameter = parameter;
+	
+	// Public method that calls the handler
+	// Returns parameter
+	function getPrivate(parameter) {
+		return self.parameter
+	}
+}
+*/
 // Load the Visualization API and the controls package.
 google.load('visualization', '1.0', {'packages':['controls']});
 
