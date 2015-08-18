@@ -57,6 +57,30 @@ google.load('visualization', '1.0', {'packages':['controls']});
 google.setOnLoadCallback(queryData);
 
 
+///// ---------- To use with CSV, see below code
+/*
+
+
+google.setOnLoadCallback(drawDash);
+
+function drawDash () {
+	// grab the CSV
+	$.get("file-with-csv.csv", function(csvString) {
+		// transform the CSV string into a 2-dimensional array
+		var arrayData = $.csv.toArrays(csvString, {onParseValue: $.csv.hooks.castToScalar});
+    	var data = new google.visualization.arrayToDataTable(arrayData);
+	
+}
+
+
+
+*/
+///// ---------- End
+
+
+
+
+
 function queryData() {
   //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing
   //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit#gid=0
