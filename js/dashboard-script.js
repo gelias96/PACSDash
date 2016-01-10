@@ -54,7 +54,7 @@ function pacdash(parameter) {
 google.load('visualization', '1.0', {'packages':['controls']});
 
 // Set a callback to run when the Google Visualization API is loaded.
-google.setOnLoadCallback(queryData);
+google.setOnLoadCallback(queryMyData);
 
 
 ///// ---------- To use with CSV, see below code
@@ -81,15 +81,16 @@ function drawDash () {
 
 
 
-function queryData() {
+function queryMyData() {
   //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing
   //https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit#gid=0
   // Create my data table.
-  var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing");
-  query.send(handleQueryResponse);
+  var query = new google.visualization.Query("https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing"); 
+  // "new" url is https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit#gid=0
+  // "old" url is https://docs.google.com/spreadsheets/d/19bSn16vLVvvCCUBSoIMfaM4ZvE8vTQxHIzuKdUaT9Jk/edit?usp=sharing
+  query.send(handleMyQueryResponse);
 }
-
-function handleQueryResponse(response) {
+function handleMyQueryResponse(response) {
  if (response.isError()) {
    alert('Error in query:' + response.getMessage() + ' ' + response.getDetailedMessage());
  return;

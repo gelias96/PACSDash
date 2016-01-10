@@ -102,10 +102,10 @@ $(document).ready(function() {
 	}					
 	if (!(combo)) {
 		pieData = google.visualization.data.group(tableView, [1,4],[{'column': n, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
-		pieData.If[2].label = "Total " + pieData.If[2].label
+		pieData.Ff[2].label = "Total " + pieData.Ff[2].label
 		var numRows = pieData.getNumberOfRows();
 		for (var i=numRows; i--;) {
-			pieData.Lf[i].c[0].v = 	pieData.Lf[i].c[0].v + " " + pieData.Lf[i].c[1].v
+			pieData.Gf[i].c[0].v = 	pieData.Gf[i].c[0].v + " " + pieData.Gf[i].c[1].v
 		}
 		myChart.setView({columns: [0,2]})		
 		if (n==2) {			
@@ -115,7 +115,7 @@ $(document).ready(function() {
 		}							
 	} else {
 		pieData = google.visualization.data.group(tableView, [1],[{'column': n, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);
-		pieData.If[1].label = "Total " + pieData.If[1].label					  
+		pieData.Ff[1].label = "Total " + pieData.Ff[1].label					  
 		numberFormatter.format(pieData, 1);
 		myChart.setView({columns: [0,1]});	
 		if (n==2) {			

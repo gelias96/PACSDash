@@ -163,7 +163,7 @@ $(document).ready(function() {
 		pattern = '##,###.##';					
 	}
 	numberFormatter3.format(columnDataTableOverTime, 0);
-	columnDataTableOverTime.If[0].pattern = "####"; // Number formatter is not working; it shows the formatted value in the actual data, but not on the graph. This does is manually.				
+	columnDataTableOverTime.Ff[0].pattern = "####"; // Number formatter is not working; it shows the formatted value in the actual data, but not on the graph. This does is manually.				
 
 	// Add tooltip column to avoid cutting text off. Add style column to assign different colors
 	columnDataTotal.addColumn({type: 'number', role:'tooltip', pattern: pattern});
@@ -172,7 +172,7 @@ $(document).ready(function() {
 	var j=0;
 	for (var i=columnDataTotal.getNumberOfRows(); i--;) {
 		columnDataTotal.setCell(j, 3, 'color:' + colors[j]);
-		columnDataTotal.setCell(i, 2, columnDataTotal.getValue(i,1), columnDataTotal.Lf[i].c[1].f);									
+		columnDataTotal.setCell(i, 2, columnDataTotal.getValue(i,1), columnDataTotal.Gf[i].c[1].f);									
 		j++;
 	}
 

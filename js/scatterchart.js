@@ -284,7 +284,7 @@ $(document).ready(function() {
 	var scatterDataCombined;
 	var scatterDataCombined2;
 	if (combo) { 
-		scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': 5, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
+		scatterDataCombined = google.visualization.data.group(tableView, [0,1],[{'column': n, 'aggregation': google.visualization.data.sum, 'type': 'number'}]);    			
 		var row_index = scatterDataCombined.getNumberOfRows()-1;
 		for (var i=yearLength; i--;) {
 			scatterArray[i+1] = [];
@@ -346,21 +346,21 @@ $(document).ready(function() {
 		var scatterDataTable = google.visualization.arrayToDataTable(scatterArray)
   
 		// Format data, set type
-		scatterDataTable.If[0].type = "number"
+		scatterDataTable.Ff[0].type = "number"
 		if (n=2) {
 			for (var i=modalityLength+1; i--;) {
-				scatterDataTable.If[i].type = "number" 
+				scatterDataTable.Ff[i].type = "number" 
 				numberFormatter.format(scatterDataTable, i);
 				if (!(combo)) {
 					if (isExternal && isInternal) {
-						scatterDataTable.If[i + modalityLength].type = "number" 
+						scatterDataTable.Ff[i + modalityLength].type = "number" 
 						numberFormatter.format(scatterDataTable, i+modalityLength);					
 					}
 				}
 			}
 		} else {
 			for (var i=modalityLength+1; i--;) {
-				scatterDataTable.If[i].type = "number"
+				scatterDataTable.Ff[i].type = "number"
 				numberFormatter2.format(scatterDataTable, i);
 				if (!(combo)) {
 					if (isExternal && isInternal) {
